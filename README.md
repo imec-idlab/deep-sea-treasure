@@ -1,6 +1,4 @@
 # DeepSeaTreasure Environment
-[![pipeline status](https://gitlab.ilabt.imec.be/team-peter-hellinckx/reinforcement-learning/multi-objective-reinforcement-learning/deep-sea-treasure/badges/master/pipeline.svg)](https://gitlab.ilabt.imec.be/team-peter-hellinckx/reinforcement-learning/multi-objective-reinforcement-learning/deep-sea-treasure/-/commits/master)
-[![coverage report](https://gitlab.ilabt.imec.be/team-peter-hellinckx/reinforcement-learning/multi-objective-reinforcement-learning/deep-sea-treasure/badges/master/coverage.svg)](https://gitlab.ilabt.imec.be/team-peter-hellinckx/reinforcement-learning/multi-objective-reinforcement-learning/deep-sea-treasure/-/commits/master)
  
 ![animation of submarine search for treasure](/res/Deep-Sea-Treasure-v0.gif "DeepSeaTreasure v0")
 
