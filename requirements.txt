@@ -1,0 +1,4 @@
+gym
+jsonschema
+numpy>=1.21
+pygame

@@ -1,0 +1,29 @@
+{
+	"@context": "https://doi.org/10.5063/SCHEMA/CODEMETA-1.0",
+	"@type": "Code",
+	"description": "A `gym` environment for the DeepSeaTreasure problem originally proposed by Vamplew et al.",
+	"name": "DeepSeaTreasure",
+	"programmingLanguage": "Python",
+	"runtimePlatform": "Python3.7",
+	"softwareRequirements": {
+		"@type": "SoftwareSourceCode",
+		"codeRepository": "https://gitlab.ilabt.imec.be/team-peter-hellinckx/reinforcement-learning/multi-objective-reinforcement-learning/deep-sea-treasure",
+		"license": "https://www.mozilla.org/en-US/MPL/2.0/"
+	},
+	"author": [
+		{
+			"@id": "https://orcid.org/0000-0002-7471-2508",
+			"@type": "Person",
+			"email": "thomas.cassimon@uantwerpen.be",
+			"name": "Thomas Cassimon"
+		},
+		{
+			"@id": "https://orcid.org/0000-0002-9352-7981",
+			"@type": "Person",
+			"email": "reinout.eyckerman@uantwerpen.be",
+			"name": "Reinout Eyckerman"
+		}
+	],
+	"isAccessibleForFree": true,
+	"affiliation": "University of Antwerp - imec\nIDLab - Faculty of Applied Engineering\nSint-Pietersvliet 7, 2000 Antwerp, Belgium"
+}

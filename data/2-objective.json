@@ -1,0 +1,57 @@
+{
+	"pareto_front": [
+		{
+			"treasure":        124.0,
+			"time":            -19.0,
+			"action_sequence": [
+				"right", "right", "right", "right", "right", "right", "right", "right", "right", "down", "down", "down",
+				"down", "down", "down", "down", "down", "down", "down"
+			]
+		}, {
+			"treasure":        74.0,
+			"time":            -17.0,
+			"action_sequence": [
+				"right", "right", "right", "right", "right", "right", "right", "right", "down", "down", "down", "down",
+				"down", "down", "down", "down", "down"
+			]
+		}, {
+			"treasure":        50.0,
+			"time":            -14.0,
+			"action_sequence": [
+				"right", "right", "right", "right", "right", "right", "right", "down", "down", "down", "down", "down",
+				"down", "down"
+			]
+		}, {
+			"treasure":        24.0,
+			"time":            -13.0,
+			"action_sequence": [
+				"right", "right", "right", "right", "right", "right", "down", "down", "down", "down", "down", "down",
+				"down"
+			]
+		}, {
+			"treasure":        16.0,
+			"time":            -9.0,
+			"action_sequence": ["right", "right", "right", "right", "right", "down", "down", "down", "down"]
+		}, {
+			"treasure":        8.0,
+			"time":            -8.0,
+			"action_sequence": ["right", "right", "right", "right", "down", "down", "down", "down"]
+		}, {
+			"treasure":        5.0,
+			"time":            -7.0,
+			"action_sequence": ["right", "right", "right", "down", "down", "down", "down"]
+		}, {
+			"treasure":        3.0,
+			"time":            -5.0,
+			"action_sequence": ["right", "right", "down", "down", "down"]
+		}, {
+			"treasure":        2.0,
+			"time":            -3.0,
+			"action_sequence": ["right", "down", "down"]
+		}, {
+			"treasure":        1.0,
+			"time":            -1.0,
+			"action_sequence": ["down"]
+		}
+	]
+}

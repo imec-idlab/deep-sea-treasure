@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft/2019-09/schema#",
+  "$comment": "\nThis Source Code Form is subject to the terms of the Mozilla Public\nLicense, v. 2.0. If a copy of the MPL was not distributed with this\nfile, You can obtain one at https://mozilla.org/MPL/2.0/.\n",
+  "type": "object",
+  "properties": {
+	"fuel_cost": {
+	  "type": "array",
+	  "minItems": 1,
+	  "maxItems": 128,
+	  "items": {
+		"type": "integer",
+		"exclusiveMinimum": 0
+	  }
+	}
+  },
+  "required": [
+	"fuel_cost"
+  ]
+}

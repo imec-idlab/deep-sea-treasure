@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft/2019-09/schema#",
+  "$comment": "\nThis Source Code Form is subject to the terms of the Mozilla Public\nLicense, v. 2.0. If a copy of the MPL was not distributed with this\nfile, You can obtain one at https://mozilla.org/MPL/2.0/.\n",
+  "type": "object",
+  "properties": {
+	"acceleration_levels": {
+	  "type": "array",
+	  "minItems": 1,
+	  "maxItems": 128,
+	  "items": {
+		"type": "integer",
+		"exclusiveMinimum": 0
+	  }
+	},
+	"implicit_collision_constraint": {
+		"type": "integer",
+		"minimum": 0,
+		"maximum": 1
+	},
+	"max_steps": {
+	  "type": "integer",
+	  "minimum": 1,
+	  "maximum": 16384
+	},
+	"max_velocity": {
+	  "type": "number",
+	  "exclusiveMinimum": 0.0,
+	  "maximum": 128.0
+	},
+	"render_grid": {
+	  "type": "integer",
+	  "minimum": 0,
+	  "maximum": 1
+	},
+	"render_treasure_values": {
+	  "type": "integer",
+	  "minimum": 0,
+	  "maximum": 1
+	},
+	"theme": {
+	},
+	"treasure_values": {
+	  "type": "array",
+	  "minItems": 10,
+	  "maxItems": 128,
+	  "items": {
+		"type": "array",
+		"length": 2,
+		"items": [
+			{
+				"type": "array",
+				"length": 2,
+				"items": {
+					"type": "integer",
+					"minimum": 0
+				}
+			},
+			{
+				"type": "number",
+				"exclusiveMinimum": 0
+			}
+		]
+	  }
+	}
+  },
+  "required": ["acceleration_levels", "implicit_collision_constraint", "max_steps", "max_velocity", "render_grid", "render_treasure_values", "theme", "treasure_values"]
+}
