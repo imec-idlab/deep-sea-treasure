@@ -101,7 +101,7 @@ packaging:
   script:
     - python3 setup.py sdist bdist_wheel
     - rm -rf __pycache__
-    - TWINE_PASSWORD=${PACKAGE_PUBLISH_PASSWORD} TWINE_USERNAME=${PACKAGE_PUBLISH_DEPLOY_TOKEN} python3 -m twine upload --repository-url https://gitlab.ilabt.imec.be/api/v4/projects/2994/packages/pypi dist/*
+    - TWINE_PASSWORD=${PACKAGE_PUBLISH_PASSWORD} TWINE_USERNAME=${PACKAGE_PUBLISH_DEPLOY_TOKEN} python3 -m twine upload --repository testpypi  dist/*
   needs:
     - static-analysis
     - test-suite
