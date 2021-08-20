@@ -56,7 +56,6 @@ coverage-analysis:
   stage: test
   before_script:
     - *install_python_dependencies
-    - *inject_build_number
     - *inject_commit_hash
     - rm -rf .pytest_cache || true
   script:
