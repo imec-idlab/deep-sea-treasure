@@ -1,0 +1,109 @@
+image: "gitlab.ilabt.imec.be:4567/team-peter-hellinckx/ci/python-ci:python-37"
+
+
+include:
+  - template: Dependency-Scanning.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
+  - template: Security/Secret-Detection.gitlab-ci.yml
+  - template: Security/License-Scanning.gitlab-ci.yml
+
+variables:
+  PIP_REQUIREMENTS_FILE: "requirements.txt"
+  SECURE_LOG_LEVEL: debug
+  SAST_FLAWFINDER_LEVEL: 0
+  SAST_EXCLUDED_PATHS: "spec, test, tests, tmp"
+
+
+static-analysis:
+  stage: build
+  interruptible: true
+  before_script:
+    - &install_python_dependencies |-
+      apt-get update -y
+      apt-get install -y --no-install-recommends gcc libjpeg-dev libjpeg62 zlib1g
+      python3 -m pip install -r requirements.txt
+    - rm -rf .mypy_cache || true
+    - &inject_build_number "sed -i -E \"s/^[vV][eE][rR][sS][iI][oO][nN]\\s*(:\\s*str)?\\s*=\\s*[\\\"']([0-9]+\\.[0-9]+\\.[0-9]+)[\\\"']$/VERSION: str = \\\"\\2+${CI_PIPELINE_ID}\\\"/g\" deep_sea_treasure/__version__.py"
+    - &inject_commit_hash "sed -i -E \"s/^[cC][oO][mM][mM][iI][tT]_[hH][aA][sS][hH]\\s*(:\\s*str)?\\s*=\\s*[\\\"'].*[\\\"']$/COMMIT_HASH: str = \\\"$(git rev-parse --verify HEAD)\\\"/g\" deep_sea_treasure/__version__.py"
+  script:
+    - python3 -m mypy --config-file=.mypy.ini deep_sea_treasure/
+  needs: []
+
+
+data-parsing:
+  stage: test
+  interruptible: true
+  script:
+    - python3 -c "import json; fp = open('data/2-objective.json', 'r'); json.load(fp=fp)"
+    - python3 -c "import json; fp = open('data/3-objective.json', 'r'); json.load(fp=fp)"
+
+test-suite:
+  stage: test
+  interruptible: true
+  before_script:
+    - *install_python_dependencies
+    - *inject_build_number
+    - *inject_commit_hash
+    - rm -rf .pytest_cache || true
+  script:
+    - pytest tests/ --junit-xml="test_suite.xml"
+  artifacts:
+    when: always
+    reports:
+      junit: "test_suite.xml"
+  needs:
+    - static-analysis
+
+coverage-analysis:
+  stage: test
+  before_script:
+    - *install_python_dependencies
+    - *inject_build_number
+    - *inject_commit_hash
+    - rm -rf .pytest_cache || true
+  script:
+    - coverage run -m pytest tests/
+    - coverage report --include="*deep_sea_treasure/*" --omit="*tests*" --precision=2 --sort=cover --skip-empty -m
+    - coverage xml --include="*deep_sea_treasure/*" --omit="*tests*" --skip-empty
+  artifacts:
+    when: always
+    reports:
+      cobertura: "coverage.xml"
+  needs:
+    - static-analysis
+
+packaging-test:
+  stage: deploy
+  interruptible: true
+  except:
+    - /^master$/
+  before_script:
+    - *install_python_dependencies
+    - *inject_build_number
+    - *inject_commit_hash
+  script:
+    - python3 setup.py sdist bdist_wheel
+  needs:
+    - static-analysis
+    - test-suite
+    - data-parsing
+
+packaging:
+  stage: deploy
+  interruptible: true
+  only:
+    - /^master$/
+  before_script:
+     - *install_python_dependencies
+     - *inject_build_number
+     - *inject_commit_hash
+     - python3 -m pip install twine toml
+  script:
+    - python3 setup.py sdist bdist_wheel
+    - rm -rf __pycache__
+    - TWINE_PASSWORD=${PACKAGE_PUBLISH_PASSWORD} TWINE_USERNAME=${PACKAGE_PUBLISH_DEPLOY_TOKEN} python3 -m twine upload --repository-url https://gitlab.ilabt.imec.be/api/v4/projects/2994/packages/pypi dist/*
+  needs:
+    - static-analysis
+    - test-suite
+    - data-parsing
+
