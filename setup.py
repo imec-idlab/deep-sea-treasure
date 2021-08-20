@@ -81,7 +81,7 @@ setuptools.setup(
 			"License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
 			"Natural Language :: English",
 			"Operating System :: OS Independent",
-			"Programming Lanugage :: Python :: 3",
+			"Programming Language :: Python :: 3",
 			"Topic :: Scientific/Engineering :: Artificial Intelligence"
 		],
 		packages=["deep_sea_treasure"],
