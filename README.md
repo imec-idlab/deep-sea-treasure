@@ -5,13 +5,13 @@
 ## Installation
 In order to get started with this environment, you can install it using the following command:
 ```shell
-python3 -m pip install --extra-index-url="https://__token__:<PERSONAL ACCESS TOKEN>@gitlab.ilabt.imec.be/api/v4/projects/2994/packages/pypi/simple"  deep_sea_treasure --upgrade
+python3 -m pip install  deep_sea_treasure --upgrade
 ```
-_(Make sure to fill in your own [**PERSONAL ACCESS TOKEN**](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html))_
 
 ## Data
 If you are only interested in obtaining the Pareto-front data, you can find that  on the [data/](data/) folder:
 
+- [2-objective Pareto-front](data/2-objective.json)
 - [3-objective Pareto-front](data/3-objective.json)
 
 ## Example
