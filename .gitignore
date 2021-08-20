@@ -5,5 +5,4 @@
 *__pycache__*
 *.pytest_cache*
 Pipfile.lock
-/.gitlab-ci.yml
 /tmp.py
