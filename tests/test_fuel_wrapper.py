@@ -4,6 +4,8 @@
 
 import gym
 import unittest
+
+import jsonschema
 import numpy as np
 
 from deep_sea_treasure import DeepSeaTreasureV0, FuelWrapper
@@ -103,3 +105,20 @@ class FuelWrapperTest(unittest.TestCase):
 		self.assertFalse(done_1)
 		self.assertEqual(exp_obs_1.shape, obs_1.shape)
 		np.testing.assert_equal(exp_obs_1, obs_1)
+
+	def test_config(self) -> None:
+		wrapper: FuelWrapper = FuelWrapper.new(self.dst, fuel_cost=[1, 2])
+
+		config = wrapper.config()
+
+		# First, make sure that the result of `.config()` validates against the schema
+		validator = jsonschema.Draft7Validator(schema=FuelWrapper.schema())
+
+		# Test will fail if this raises a ValidationException
+		validator.validate(config)
+
+		# Next, make sure we can construct a new environment from this config
+		new_dst: FuelWrapper = FuelWrapper(self.dst, config)
+
+		self.assertIn("inner", config)
+		self.assertEqual([1, 2], config["fuel_cost"])
