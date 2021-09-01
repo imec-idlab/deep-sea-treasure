@@ -368,16 +368,16 @@ class DeepSeaTreasureV0(gym.Env): #type: ignore[misc]
 
 		treasure_values: List[List[Union[List[int], float]]] = []
 
-		for x in range(int(self.seabed.shape[1])):
+		for x in range(int(self.seabed.shape[0])):
 			y: int = int(self.seabed[x])
 
 			treasure_values.append([[x, y], self.treasures[(x, y)]])
 
 		return {
-			"acceleration_levels": list(self.acceleration_levels[acceleration_start_index:]),
+			"acceleration_levels": [int(i) for i in self.acceleration_levels[acceleration_start_index:]],
 			"implicit_collision_constraint": bool(self.implicit_collision_objective),
 			"max_steps": int(self.max_time_steps),
-			"max_velocity": float(self.max_vel),
+			"max_velocity": float(self.max_vel[0]),
 			"treasure_values": treasure_values,
 			"render_grid": bool(self.render_grid),
 			"render_treasure_values": bool(self.render_treasure_values),
