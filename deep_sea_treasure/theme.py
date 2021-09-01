@@ -5,11 +5,16 @@
 from __future__ import annotations
 
 import importlib.resources as pkg_resources
+from dataclasses import dataclass
+
 from typing import BinaryIO, Tuple
+
+import os
 
 Color = Tuple[int, int, int]
 
 
+@dataclass
 class Theme:
 	title: str
 
@@ -28,35 +33,45 @@ class Theme:
 	submarine_texture_file: BinaryIO
 	treasure_texture_file: BinaryIO
 
-	def __init__(
-		self,
-		title: str,
-		sky_color: Color,
-		sea_color: Color,
-		seabed_color: Color,
-		grid_color: Color,
-		treasure_font: str,
-		treasure_text_color: Color,
-		debug_font: str,
-		debug_font_size: int,
-		debug_text_color: Color,
-		debug_text_outline_color: Color,
-		treasure_texture_file: BinaryIO,
-		submarine_texture_file: BinaryIO,
-	):
-		self.title = title
-		self.sky_color = sky_color
-		self.sea_color = sea_color
-		self.seabed_color = seabed_color
-		self.grid_color = grid_color
-		self.treasure_font = treasure_font
-		self.treasure_text_color = treasure_text_color
-		self.debug_font = debug_font
-		self.debug_font_size = debug_font_size
-		self.debug_text_color = debug_text_color
-		self.debug_text_outline_color = debug_text_outline_color
-		self.submarine_texture_file = submarine_texture_file
-		self.treasure_texture_file = treasure_texture_file
+	def __eq__(self, other) -> bool:
+		"""
+		Compare two `Theme`s and return True if they are equal.
+
+		WARNING! In order to make sure two Themes are exactly equal, comparisons also involve reading all
+		bytes from the submarine and treasure texture. If these are large texture files,
+		the comparison can potentially take a long time!
+		"""
+		if not isinstance(other, Theme):
+			return False
+
+		def read_bytes(io: BinaryIO) -> bytes:
+			"""
+			Read the contents of a BinaryIO without moving the file pointer.
+			"""
+			current_pos = self.submarine_texture_file.tell()
+
+			io.seek(0, os.SEEK_SET)
+
+			byte_array: bytes = io.read()
+
+			io.seek(current_pos, os.SEEK_SET)
+
+			return byte_array
+
+		return \
+			(self.title == other.title) and \
+			(self.sky_color == other.sky_color) and \
+			(self.sea_color == other.sea_color) and \
+			(self.seabed_color == other.seabed_color) and \
+			(self.grid_color == other.grid_color) and \
+			(self.treasure_font == other.treasure_font) and \
+			(self.treasure_text_color == other.treasure_text_color) and \
+			(self.debug_font == other.debug_font) and \
+			(self.debug_font_size == other.debug_font_size) and \
+			(self.debug_text_color == other.debug_text_color) and \
+			(self.debug_text_outline_color == other.debug_text_outline_color) and \
+			(read_bytes(self.submarine_texture_file) == read_bytes(other.submarine_texture_file)) and \
+			(read_bytes(self.treasure_texture_file) == read_bytes(other.treasure_texture_file))
 
 	def __del__(self) -> None:
 		self.submarine_texture_file.close()
