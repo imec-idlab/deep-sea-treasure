@@ -7,7 +7,7 @@ from __future__ import annotations
 import importlib.resources as pkg_resources
 from dataclasses import dataclass
 
-from typing import BinaryIO, Tuple
+from typing import Any, BinaryIO, Tuple
 
 import os
 
@@ -33,7 +33,7 @@ class Theme:
 	submarine_texture_file: BinaryIO
 	treasure_texture_file: BinaryIO
 
-	def __eq__(self, other) -> bool:
+	def __eq__(self, other: Any) -> bool:
 		"""
 		Compare two `Theme`s and return True if they are equal.
 
