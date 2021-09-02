@@ -13,7 +13,7 @@
 	  }
 	},
 	"implicit_collision_constraint": {
-		"type": "integer",
+		"type": ["boolean","integer"],
 		"minimum": 0,
 		"maximum": 1
 	},
@@ -28,12 +28,12 @@
 	  "maximum": 128.0
 	},
 	"render_grid": {
-	  "type": "integer",
+	  "type": ["boolean","integer"],
 	  "minimum": 0,
 	  "maximum": 1
 	},
 	"render_treasure_values": {
-	  "type": "integer",
+	  "type": ["boolean","integer"],
 	  "minimum": 0,
 	  "maximum": 1
 	},

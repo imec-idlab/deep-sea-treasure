@@ -7,6 +7,9 @@ import unittest
 
 from typing import List, Union
 
+import jsonschema
+from deep_sea_treasure.theme import Theme
+
 from deep_sea_treasure import DeepSeaTreasureV0
 
 import numpy as np
@@ -797,3 +800,40 @@ class DeepSeaTreasureV0Test(unittest.TestCase):
 
 		# Check reward
 		np.testing.assert_equal(np.asarray([-1.0, -2.0]), rew)
+
+	def test_config(self) -> None:
+		default_treasures = [
+			[[0, 1], 1.0],
+			[[1, 2], 2.0],
+			[[2, 3], 3.0],
+			[[3, 4], 5.0],
+			[[4, 4], 8.0],
+			[[5, 4], 16.0],
+			[[6, 7], 24.0],
+			[[7, 7], 50.0],
+			[[8, 9], 74.0],
+			[[9, 10], 124.0]
+		]
+
+		dst: DeepSeaTreasureV0 = DeepSeaTreasureV0.new()
+
+		config = dst.config()
+
+		# First, make sure that the result of `.config()` validates against the schema
+		validator = jsonschema.Draft7Validator(schema=DeepSeaTreasureV0.schema())
+
+		# Test will fail if this raises a ValidationException
+		validator.validate(config)
+
+		# Next, make sure we can construct a new environment from this config
+		new_dst: DeepSeaTreasureV0 = DeepSeaTreasureV0(config)
+
+		# Finally, verify that the values in the default config match the expected values
+		self.assertEqual([1, 2, 3], config["acceleration_levels"])
+		self.assertFalse(config["implicit_collision_constraint"])
+		self.assertEqual(1000, config["max_steps"])
+		self.assertEqual(1.0, config["max_velocity"])
+		self.assertEqual(default_treasures, config["treasure_values"])
+		self.assertFalse(config["render_grid"])
+		self.assertFalse(config["render_treasure_values"])
+		self.assertEqual(Theme.default(), config["theme"])

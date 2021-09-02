@@ -25,6 +25,8 @@ class VamplewWrapper(gym.Wrapper): #type: ignore[misc]
 	def __init__(self, env: gym.Env, wrapper_config: Dict[str, Any]):
 		super(VamplewWrapper, self).__init__(env)
 
+		contract(hasattr(env, "config"), f"{self.__class__.__name__} was used to wrap {env.__class__.__name__} which doesn't have a \"config\" attribute required for extracting configuration information!")
+
 		# Validate own config
 		Draft7Validator(schema=VamplewWrapper.schema()).validate(wrapper_config)
 
@@ -151,3 +153,9 @@ class VamplewWrapper(gym.Wrapper): #type: ignore[misc]
 		schema: Dict[str, Any] = json.loads(pkg_resources.read_text("deep_sea_treasure.schema", "vamplew_wrapper.schema.json"))
 
 		return schema
+
+	def config(self) -> Dict[str, Any]:
+		return {
+			"enable_idle": bool(self.idle_enabled),
+			"inner": self.env.config()
+		}

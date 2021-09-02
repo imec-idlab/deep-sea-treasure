@@ -34,6 +34,7 @@ class DeepSeaTreasureV0(gym.Env): #type: ignore[misc]
 	# Environment
 	seabed: npt.NDArray[np.single]
 	implicit_collision_objective: bool
+	treasures: Dict[Tuple[int, int], float]
 
 	# Submarine (position and velocity)
 	max_vel: npt.NDArray[np.int32]
@@ -55,7 +56,7 @@ class DeepSeaTreasureV0(gym.Env): #type: ignore[misc]
 	def __init__(self, env_config: Dict[str, Any]):
 		super(DeepSeaTreasureV0, self).__init__()
 
-		Draft7Validator(schema=DeepSeaTreasureV0.__config_schema()).validate(env_config)
+		Draft7Validator(schema=DeepSeaTreasureV0.schema()).validate(env_config)
 
 		contract(float(env_config["max_velocity"]) < float(len(env_config["treasure_values"])), "Maximum velocity ({0}) can never exceed size of world ({1})!", env_config['max_velocity'], len(env_config['treasure_values']))
 
@@ -88,7 +89,7 @@ class DeepSeaTreasureV0(gym.Env): #type: ignore[misc]
 		# Dictionary
 		# This dictionary maps an (x, y) coordinate pair to the associated treasure
 		# If the coordinate pair does not exist in the dictionary, then this square does not contain treasure
-		self.treasures: Dict[Tuple[int, int], float] = {}
+		self.treasures = {}
 
 		x_set: Set[int] = set()
 
@@ -362,6 +363,27 @@ class DeepSeaTreasureV0(gym.Env): #type: ignore[misc]
 			render_treasure_values=self.render_treasure_values
 		)
 
+	def config(self) -> Dict[str, Any]:
+		acceleration_start_index: int = (int(self.acceleration_levels.shape[0]) // 2) + 1
+
+		treasure_values: List[List[Union[List[int], float]]] = []
+
+		for x in range(int(self.seabed.shape[0])):
+			y: int = int(self.seabed[x])
+
+			treasure_values.append([[x, y], self.treasures[(x, y)]])
+
+		return {
+			"acceleration_levels": [int(i) for i in self.acceleration_levels[acceleration_start_index:]],
+			"implicit_collision_constraint": bool(self.implicit_collision_objective),
+			"max_steps": int(self.max_time_steps),
+			"max_velocity": float(self.max_vel[0]),
+			"treasure_values": treasure_values,
+			"render_grid": bool(self.render_grid),
+			"render_treasure_values": bool(self.render_treasure_values),
+			"theme": self.theme
+		}
+
 	@staticmethod
 	def new(
 			treasure_values: Optional[List[List[Union[List[int], float]]]] = None,
@@ -404,7 +426,7 @@ class DeepSeaTreasureV0(gym.Env): #type: ignore[misc]
 		return DeepSeaTreasureV0(config)
 
 	@staticmethod
-	def __config_schema() -> Dict[str, Any]:
+	def schema() -> Dict[str, Any]:
 		schema: Dict[str, Any] = json.loads(pkg_resources.read_text("deep_sea_treasure.schema",
 																	"deep_sea_treasure.schema.json"))
 		return schema
