@@ -1,6 +1,6 @@
 # DeepSeaTreasure Environment
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5227092.svg)](https://doi.org/10.5281/zenodo.5227092)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5227091.svg)](https://doi.org/10.5281/zenodo.5227091)
 ![animation of submarine search for treasure](/res/Deep-Sea-Treasure-v0.gif "DeepSeaTreasure v0")
 
 ## Installation
