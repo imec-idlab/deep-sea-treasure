@@ -69,8 +69,8 @@ def get_dependencies(requirements_filename: str = "requirements.txt") -> List[st
 setuptools.setup(
 		name="deep_sea_treasure",
 		version=get_version(),
-		author="Thomas Cassimon; Reinout Eyckerman",
-		author_email="thomas.cassimon@uantwerpen.be; reinout.eyckerman@uantwerpen.be",
+		author="Thomas Cassimon, Reinout Eyckerman",
+		author_email="thomas.cassimon@uantwerpen.be, reinout.eyckerman@uantwerpen.be",
 		description="An environment for testing multi-objective reinforcement learning algorithms.",
 		long_description=get_long_description(),
 		long_description_content_type="text/markdown",
