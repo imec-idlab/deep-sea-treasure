@@ -84,8 +84,11 @@ setuptools.setup(
 			"Programming Language :: Python :: 3",
 			"Topic :: Scientific/Engineering :: Artificial Intelligence"
 		],
+		keywords=["deep", "sea", "treasure", "rl", "morl", "multi", "objective"],
 		packages=["deep_sea_treasure"],
 		package_data={"deep_sea_treasure": ["res/*.png", "res/__init__.py", "schema/*.json", "schema/__init__.py", "py.typed"]},
 		python_requires=f">={get_python_version()}",
-		install_requires=get_dependencies()
+		install_requires=get_dependencies(),
+		url="https://github.com/imec-idlab/deep-sea-treasure",
+		project_urls={"github": "https://github.com/imec-idlab/deep-sea-treasure", "zenodo": "https://doi.org/10.5281/zenodo.5227091"}
 )
