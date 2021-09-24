@@ -60,6 +60,10 @@ class DeepSeaTreasureV0(gym.Env): #type: ignore[misc]
 
 		contract(float(env_config["max_velocity"]) < float(len(env_config["treasure_values"])), "Maximum velocity ({0}) can never exceed size of world ({1})!", env_config['max_velocity'], len(env_config['treasure_values']))
 
+		# Compensate for theme missing from config
+		if ("theme" not in env_config) or (("theme" in env_config) and (env_config["theme"] is None)):
+			env_config["theme"] = Theme.default()
+
 		# Action space: 2 x no. acceleration levels.
 		# One is acceleration in x-direction, other is acceleration in y-direction.
 		# there are a number of actions in each direction, each corresponding to a single level of acceleration.
@@ -381,7 +385,7 @@ class DeepSeaTreasureV0(gym.Env): #type: ignore[misc]
 			"treasure_values": treasure_values,
 			"render_grid": bool(self.render_grid),
 			"render_treasure_values": bool(self.render_treasure_values),
-			"theme": self.theme
+			"theme": None
 		}
 
 	@staticmethod
