@@ -180,6 +180,7 @@ class DeepSeaTreasureV0Test(unittest.TestCase):
 		actual_observation: np.ndarray = dst.reset()
 
 		self.assertEqual(expected_observation.shape, actual_observation.shape)
+		self.assertEqual(dst.observation_space.dtype, actual_observation.dtype)
 
 		for (exp, act) in zip(np.nditer(expected_observation), np.nditer(actual_observation)):
 			self.assertEqual(exp, act)
