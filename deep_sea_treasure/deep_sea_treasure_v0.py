@@ -88,7 +88,7 @@ class DeepSeaTreasureV0(gym.Env): #type: ignore[misc]
 		# Observation is a 2 x (N + 1) matrix, if the environment has size N
 		# First column is the submarine's x (0) and y (1) velocity
 		# Next N columns represent the relative coordinates from the submarine to each treasure
-		self.observation_space = gym.spaces.Box(low=float("-inf"), high=float("+inf"), shape=(2, 1 + len(env_config["treasure_values"])))
+		self.observation_space = gym.spaces.Box(low=np.iinfo(np.int32).min, high=np.iinfo(np.int32).max, shape=(2, 1 + len(env_config["treasure_values"])), dtype=np.int32)
 
 		# Dictionary
 		# This dictionary maps an (x, y) coordinate pair to the associated treasure
