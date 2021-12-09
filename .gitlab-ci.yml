@@ -2,7 +2,6 @@ image: "gitlab.ilabt.imec.be:4567/team-peter-hellinckx/ci/python-ci:python-37"
 
 
 include:
-  - template: Dependency-Scanning.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Secret-Detection.gitlab-ci.yml
   - template: Security/License-Scanning.gitlab-ci.yml
