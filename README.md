@@ -77,6 +77,21 @@ while not stop:
 
 This will allow you to play around in the environment, and move the sub around, finding treasures!
 
+__Note__: It is possible that the code generates a precision warning from `gym`, this usually looks something like this:
+```
+.../python3.8/site-packages/gym/spaces/box.py:73: UserWarning: WARN: Box bound precision lowered by casting to float32
+  logger.warn(
+```
+This warning is not critical, and doesn't impact the functioning of the environment. If you wish to silence this warning, you can raise the minimum logging level to 40 (`ERROR`) for `gym` using the following code:
+
+```python
+gym.logger.set_level(40)
+```
+
+This code can be placed at the top of the `deep_sea_treasure_v0.py` file, after gym is imported (`import gym`), and should prevent this warning from being shown.
+
+*Keep in mind that raising the logging level may, unintentionally, silence other warnings, so do this at your own risk.*
+
 ## API
 This section will provide you with a detailed description of the API we offer, and how you can use it.
 In general, our API matches that of OpenAI's gym package.
