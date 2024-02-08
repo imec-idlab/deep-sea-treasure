@@ -86,7 +86,7 @@ setuptools.setup(
 		],
 		keywords=["deep", "sea", "treasure", "rl", "morl", "multi", "objective"],
 		packages=["deep_sea_treasure"],
-		package_data={"deep_sea_treasure": ["res/*.png", "res/__init__.py", "schema/*.json", "schema/__init__.py", "py.typed"]},
+		package_data={"deep_sea_treasure": ["res/*.png", "res/__init__.py", "schema/*.json", "schema/__init__.py", "py.typed", "data/*-objective.json"]},
 		python_requires=f">={get_python_version()}",
 		install_requires=get_dependencies(),
 		url="https://github.com/imec-idlab/deep-sea-treasure",

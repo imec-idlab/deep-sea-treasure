@@ -838,3 +838,116 @@ class DeepSeaTreasureV0Test(unittest.TestCase):
 		self.assertFalse(config["render_grid"])
 		self.assertFalse(config["render_treasure_values"])
 		self.assertEqual(Theme.default(), config["theme"])
+
+	# These next two tests (`test_diagonal_clipping_from_starting_position` and ``)
+	# were added after we received a comment from Sara Pyykölä from the University of Helsinki.
+	# She pointed out that our collision checks are not always consistent in cases where the agent moves diagonally.
+	# Unfortunately, changing the collision behaviour would also require us to re-generate the Pareto front,
+	# and it would make research that has already been done with this benchmark harder to reproduce.
+	# With this in mind, we decided not to change the collision checking behaviour,
+	# but we did add two unit tests to document this behaviour,
+	# and to ensure it isn't accidentally changed  in the future.
+	def test_diagonal_clipping_from_starting_position(self):
+		dst: DeepSeaTreasureV0 = DeepSeaTreasureV0.new(acceleration_levels=[1, 2], max_velocity=2)
+
+		# Move diagonally down and to the right, two squares
+		obs, _, _, debug = dst.step((np.asarray([0, 0, 0, 0, 1]), np.asarray([0, 0, 0, 0, 1])))
+
+		# Check velocity
+		self.assertEqual(0.0, obs[0][0])
+		self.assertEqual(0.0, obs[1][0])
+		self.assertEqual(0, debug["velocity"]["x"])
+		self.assertEqual(0, debug["velocity"]["y"])
+
+		# Check position
+		self.assertEqual(-0.0, obs[0][1])
+		self.assertEqual(1.0, obs[1][1])
+		self.assertEqual(0, debug["position"]["x"])
+		self.assertEqual(0, debug["position"]["y"])
+
+		self.assertFalse(debug["collision"]["horizontal"])
+		self.assertTrue(debug["collision"]["vertical"])
+		self.assertFalse(debug["collision"]["diagonal"])
+
+	def test_diagonal_clipping_from_middle_of_the_sea(self):
+		dst: DeepSeaTreasureV0 = DeepSeaTreasureV0.new(acceleration_levels=[1, 2], max_velocity=2)
+
+		# Move down 1 space and 2 spaces to the right
+		obs, _, _, debug = dst.step((np.asarray([0, 0, 0, 0, 1]), np.asarray([0, 0, 0, 1, 0])))
+
+		# Check velocity
+		self.assertEqual(2.0, obs[0][0])
+		self.assertEqual(1.0, obs[1][0])
+		self.assertEqual(2, debug["velocity"]["x"])
+		self.assertEqual(1, debug["velocity"]["y"])
+
+		# Check position
+		self.assertEqual(-2.0, obs[0][1])
+		self.assertEqual(0.0, obs[1][1])
+		self.assertEqual(2, debug["position"]["x"])
+		self.assertEqual(1, debug["position"]["y"])
+
+		self.assertFalse(debug["collision"]["horizontal"])
+		self.assertFalse(debug["collision"]["vertical"])
+		self.assertFalse(debug["collision"]["diagonal"])
+
+		# Move in the same way again (So no action, to preserve velocity)
+		# Move down 1 space and 2 spaces to the right
+		obs, _, _, debug = dst.step((np.asarray([0, 0, 1, 0, 0]), np.asarray([0, 0, 1, 0, 0])))
+
+		# Check velocity
+		self.assertEqual(2.0, obs[0][0])
+		self.assertEqual(1.0, obs[1][0])
+		self.assertEqual(2, debug["velocity"]["x"])
+		self.assertEqual(1, debug["velocity"]["y"])
+
+		# Check position
+		self.assertEqual(-4.0, obs[0][1])
+		self.assertEqual(-1.0, obs[1][1])
+		self.assertEqual(4, debug["position"]["x"])
+		self.assertEqual(2, debug["position"]["y"])
+
+		self.assertFalse(debug["collision"]["horizontal"])
+		self.assertFalse(debug["collision"]["vertical"])
+		self.assertFalse(debug["collision"]["diagonal"])
+
+		# Arrest all movement
+		obs, _, _, debug = dst.step((np.asarray([1, 0, 0, 0, 0]), np.asarray([0, 1, 0, 0, 0])))
+
+		# Check velocity
+		self.assertEqual(0.0, obs[0][0])
+		self.assertEqual(0.0, obs[1][0])
+		self.assertEqual(0, debug["velocity"]["x"])
+		self.assertEqual(0, debug["velocity"]["y"])
+
+		# Check position
+		self.assertEqual(-4.0, obs[0][1])
+		self.assertEqual(-1.0, obs[1][1])
+		self.assertEqual(4, debug["position"]["x"])
+		self.assertEqual(2, debug["position"]["y"])
+
+		self.assertFalse(debug["collision"]["horizontal"])
+		self.assertFalse(debug["collision"]["vertical"])
+		self.assertFalse(debug["collision"]["diagonal"])
+
+		# Next, we move diagonally down and to the right, 2 spaces in both directions
+		# Even though we graze the chest at (5, 4), this is not considered a collision,
+		# while grazing the chest at (0, 1) is considered a collision (See prev. test).
+		# Make the move, this should not be considered a collision
+		obs, _, _, debug = dst.step((np.asarray([0, 0, 0, 0, 1]), np.asarray([0, 0, 0, 0, 1])))
+
+		# Check velocity
+		self.assertEqual(2.0, obs[0][0])
+		self.assertEqual(2.0, obs[1][0])
+		self.assertEqual(2, debug["velocity"]["x"])
+		self.assertEqual(2, debug["velocity"]["y"])
+
+		# Check position
+		self.assertEqual(-6.0, obs[0][1])
+		self.assertEqual(-3.0, obs[1][1])
+		self.assertEqual(6, debug["position"]["x"])
+		self.assertEqual(4, debug["position"]["y"])
+
+		self.assertFalse(debug["collision"]["horizontal"])
+		self.assertFalse(debug["collision"]["vertical"])
+		self.assertFalse(debug["collision"]["diagonal"])
