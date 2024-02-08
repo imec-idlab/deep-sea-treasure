@@ -1,4 +1,4 @@
-gym
+gym<0.26
 jsonschema
 numpy>=1.21
 pygame
